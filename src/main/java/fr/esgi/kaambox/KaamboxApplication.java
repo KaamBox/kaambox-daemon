@@ -1,12 +1,14 @@
 package fr.esgi.kaambox;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,8 +21,6 @@ import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM_VALUE;
 @SpringBootApplication
 @RestController
 public class KaamboxApplication {
-	
-	private static final String MP3_EXT = ".mp3";
 	
 	private final Random random;
 	private final Path soundsPath;
@@ -40,6 +40,18 @@ public class KaamboxApplication {
 	private Path getRandomSound(final List<Path> sounds) {
 		final int index = random.nextInt(sounds.size());
 		return sounds.get(index);
+	}
+	
+	@GetMapping("/play")
+	public void playSound() throws IOException, JavaLayerException {
+		final List<Path> sounds = getAllSounds(soundsPath);
+		final Path randomSound = getRandomSound(sounds);
+		final File soundFile = randomSound.toFile();
+		
+		final InputStream soundStream = new BufferedInputStream(new FileInputStream(soundFile));
+		final AdvancedPlayer player = new AdvancedPlayer(soundStream);
+		
+		player.play();
 	}
 	
 	@GetMapping(value = "/", produces = APPLICATION_OCTET_STREAM_VALUE)

@@ -1,3 +1,7 @@
 info:
   sounds:
-    path: ./sounds
+    path: sounds/
+server:
+  error:
+    whitelabel:
+      enabled: false

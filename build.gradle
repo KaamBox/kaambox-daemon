@@ -27,5 +27,6 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('javazoom:jlayer:1.0.1')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
